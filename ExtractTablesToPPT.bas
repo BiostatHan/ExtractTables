@@ -1,13 +1,13 @@
-Attribute VB_Name = "Ä£¿é1"
+Attribute VB_Name = "æ¨¡å—1"
 ' ========================================
-' ºêÃû³Æ: ExtractTablesToPPT
-' ¹¦ÄÜ: ÌáÈ¡ Word ÎÄµµÖĞÖ¸¶¨Ò³ÃæµÄ±í¸ñ£¬²¢Õ³Ìùµ½ PowerPoint ÖĞµÄ»ÃµÆÆ¬
-' ×÷Õß: Îâº²
-' °æ±¾: 1.0
-' ´´½¨ÈÕÆÚ: 2024/12/4
-' ×îºó¸üĞÂÈÕÆÚ: 2024/12/4
-' ¸üĞÂÀúÊ·:
-'   v1.0 - ³õÊ¼°æ±¾£¬ÊµÏÖ»ù±¾¹¦ÄÜ
+' å®åç§°: ExtractTablesToPPT
+' åŠŸèƒ½: æå– Word æ–‡æ¡£ä¸­æŒ‡å®šé¡µé¢çš„è¡¨æ ¼ï¼Œå¹¶ç²˜è´´åˆ° PowerPoint ä¸­çš„å¹»ç¯ç‰‡
+' ä½œè€…: HW
+' ç‰ˆæœ¬: 1.0
+' åˆ›å»ºæ—¥æœŸ: 2024/12/4
+' æœ€åæ›´æ–°æ—¥æœŸ: 2024/12/4
+' æ›´æ–°å†å²:
+'   v1.0 - åˆå§‹ç‰ˆæœ¬ï¼Œå®ç°åŸºæœ¬åŠŸèƒ½
 ' ========================================
 
 
@@ -25,69 +25,69 @@ Sub ExtractTablesToPPT()
     Dim tbl As Table
     Dim i As Integer
     
-    ' ÌáÊ¾ÓÃ»§ÊäÈëÒ³Ãæ·¶Î§
-    specifiedPages = InputBox("ÇëÊäÈëĞèÒªÌáÈ¡±í¸ñµÄÒ³Ãæ·¶Î§£¨ÀıÈç£º1,2,3-5£©£º", "ÌáÈ¡±í¸ñµ½PPT")
+    ' æç¤ºç”¨æˆ·è¾“å…¥é¡µé¢èŒƒå›´
+    specifiedPages = InputBox("è¯·è¾“å…¥éœ€è¦æå–è¡¨æ ¼çš„é¡µé¢èŒƒå›´ï¼ˆä¾‹å¦‚ï¼š1,2,3-5ï¼‰ï¼š", "æå–è¡¨æ ¼åˆ°PPT")
     If specifiedPages = "" Then
-        MsgBox "Î´ÊäÈëÈÎºÎÒ³Ãæ·¶Î§£¡", vbExclamation
+        MsgBox "æœªè¾“å…¥ä»»ä½•é¡µé¢èŒƒå›´ï¼", vbExclamation
         Exit Sub
     End If
     
-    ' ÉèÖÃµ±Ç°ÎÄµµÎªÔ´ÎÄµµ
+    ' è®¾ç½®å½“å‰æ–‡æ¡£ä¸ºæºæ–‡æ¡£
     Set sourceDoc = ActiveDocument
 
-    ' ´´½¨ PowerPoint Ó¦ÓÃ³ÌĞòºÍĞÂÑİÊ¾ÎÄ¸å
+    ' åˆ›å»º PowerPoint åº”ç”¨ç¨‹åºå’Œæ–°æ¼”ç¤ºæ–‡ç¨¿
     On Error Resume Next
-    Set pptApp = GetObject(, "PowerPoint.Application") ' ³¢ÊÔ»ñÈ¡ PowerPoint Ó¦ÓÃ
+    Set pptApp = GetObject(, "PowerPoint.Application") ' å°è¯•è·å– PowerPoint åº”ç”¨
     If pptApp Is Nothing Then
-        Set pptApp = CreateObject("PowerPoint.Application") ' Èç¹ûÎ´ÔËĞĞ£¬Ôò´´½¨ĞÂÊµÀı
+        Set pptApp = CreateObject("PowerPoint.Application") ' å¦‚æœæœªè¿è¡Œï¼Œåˆ™åˆ›å»ºæ–°å®ä¾‹
     End If
     On Error GoTo 0
     pptApp.Visible = True
     Set pptPresentation = pptApp.Presentations.Add
 
-    ' ·Ö¸îÊäÈëµÄÒ³Ãæ·¶Î§
+    ' åˆ†å‰²è¾“å…¥çš„é¡µé¢èŒƒå›´
     pagesArray = Split(specifiedPages, ",")
     i = 1
     
-    ' ±éÀúÃ¿¸öÖ¸¶¨µÄÒ³Ãæ»ò·¶Î§
+    ' éå†æ¯ä¸ªæŒ‡å®šçš„é¡µé¢æˆ–èŒƒå›´
     For Each pageRange In pagesArray
         If InStr(pageRange, "-") > 0 Then
-            ' Èç¹ûÊÇ·¶Î§£¨Èç3-5£©£¬ÌáÈ¡ÆğÊ¼ºÍ½áÊøÒ³Ãæ
+            ' å¦‚æœæ˜¯èŒƒå›´ï¼ˆå¦‚3-5ï¼‰ï¼Œæå–èµ·å§‹å’Œç»“æŸé¡µé¢
             startPage = CLng(Split(pageRange, "-")(0))
             endPage = CLng(Split(pageRange, "-")(1))
         Else
-            ' Èç¹ûÊÇµ¥¸öÒ³Ãæ
+            ' å¦‚æœæ˜¯å•ä¸ªé¡µé¢
             startPage = CLng(pageRange)
             endPage = startPage
         End If
         
-        ' ¼ì²éÒ³Ãæ·¶Î§ÊÇ·ñÓĞĞ§
+        ' æ£€æŸ¥é¡µé¢èŒƒå›´æ˜¯å¦æœ‰æ•ˆ
         If startPage <= 0 Or endPage < startPage Then
-            MsgBox "Ò³Ãæ·¶Î§ÎŞĞ§£º" & pageRange, vbExclamation
+            MsgBox "é¡µé¢èŒƒå›´æ— æ•ˆï¼š" & pageRange, vbExclamation
             Exit Sub
         End If
         
-        ' ±éÀú·¶Î§ÄÚµÄÃ¿Ò»Ò³
+        ' éå†èŒƒå›´å†…çš„æ¯ä¸€é¡µ
         For pageNum = startPage To endPage
-            ' »ñÈ¡Ö¸¶¨Ò³ÃæµÄ·¶Î§
+            ' è·å–æŒ‡å®šé¡µé¢çš„èŒƒå›´
             Set rng = sourceDoc.GoTo(What:=wdGoToPage, Which:=wdGoToAbsolute, Count:=pageNum)
             rng.End = sourceDoc.GoTo(What:=wdGoToPage, Which:=wdGoToAbsolute, Count:=pageNum + 1).Start
-            rng.End = rng.End - 1 ' µ÷Õû·¶Î§ÖÁÒ³Ãæ½áÊø
+            rng.End = rng.End - 1 ' è°ƒæ•´èŒƒå›´è‡³é¡µé¢ç»“æŸ
             
-            ' ±éÀúÒ³ÃæÄÚµÄ±í¸ñ
+            ' éå†é¡µé¢å†…çš„è¡¨æ ¼
             For Each tbl In rng.Tables
-                ' ¸´ÖÆ±í¸ñ
+                ' å¤åˆ¶è¡¨æ ¼
                 tbl.Range.Copy
                 
-                ' ´´½¨ĞÂ»ÃµÆÆ¬²¢Õ³Ìù±í¸ñ
-                Set pptSlide = pptPresentation.Slides.Add(Index:=pptPresentation.Slides.Count + 1, Layout:=12) ' ¿Õ°×²¼¾Ö
+                ' åˆ›å»ºæ–°å¹»ç¯ç‰‡å¹¶ç²˜è´´è¡¨æ ¼
+                Set pptSlide = pptPresentation.Slides.Add(Index:=pptPresentation.Slides.Count + 1, Layout:=12) ' ç©ºç™½å¸ƒå±€
                 pptSlide.Shapes.Paste
                 i = i + 1
             Next tbl
         Next pageNum
     Next pageRange
 
-    ' Í¨ÖªÓÃ»§²Ù×÷Íê³É
-    MsgBox "±í¸ñÒÑ³É¹¦ÌáÈ¡²¢Õ³Ìùµ½ĞÂ PowerPoint ÑİÊ¾ÎÄ¸å£¡", vbInformation
+    ' é€šçŸ¥ç”¨æˆ·æ“ä½œå®Œæˆ
+    MsgBox "è¡¨æ ¼å·²æˆåŠŸæå–å¹¶ç²˜è´´åˆ°æ–° PowerPoint æ¼”ç¤ºæ–‡ç¨¿ï¼", vbInformation
 End Sub
 
